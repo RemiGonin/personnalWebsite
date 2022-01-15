@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>R&eacute;mi Gonin - Accueil</title> 
+
+        <meta charset="UTF-8">
+        <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="https://kit.fontawesome.com/5a249c12d5.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet'>
+        <link rel="stylesheet" href="styles/main.css">
+
+    </head>
+
+    
+    <body>
+
+        <header>
+            <div id="logo">
+                <a href="index.html">R&eacute;mi Gonin</a>
+            </div>
+            <div id="navbar">
+                <script>
+                $(function() {
+                    $("#navbar").load("assets/navbar.html");
+                });
+                </script>
+            </div>
+        </header>
+        
+        <div class ="page" id="premierePage">
+            <div id = "particles-js"></div>
+
+            
+        
+            <div id="presentation">
+                <div id="presentationTexte">
+                    <p>Bonjour, je suis <span class = importantText>R&eacute;mi Gonin</span></p> 
+                    <p id="etudiant">Je suis <span id="typewriter"></span></p> 
+                </div>
+            </div>
+            
+            
+            <div class="triangleInv">&#x25BC;</div>
+            <div class="triangle">&#x25B2;</div>
+            
+            <!-- <div id="divLienCV">
+                <a href="cv.html" id="lienCV">CV</a>
+            </div>
+            <div id="divProjets">
+                <p id="projets">Projets</p>
+            </div>
+            -->
+
+            <a href="#page2" id="lienAPropos">
+                <div id="aPropos" href="#page2">
+                    En savoir plus <i class="material-icons" id="arrowForward"> arrow_forward </i> 
+                </div>
+            </a>
+
+
+
+        </div>
+
+        <div class="page" id="page2">
+
+
+        </div>
+
+        <div class="page">
+
+
+        </div>
+
+
+
+        <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
+        <script type="text/javascript">
+            const instance = new Typewriter('#typewriter', {
+            strings: ["un étudiant ingénieur","passionné", "créatif", "curieux", "ambitieux"],
+            autoStart: true,
+            loop: true,
+            });
+        </script>
+
+        <script type="text/javascript" src="scripts/triangleAnimation.js"></script>
+        <script type="text/javascript" src="scripts/particles.js"></script>
+        <script type="text/javascript" src="scripts/app.js"></script>
+        <script type="text/javascript" src="scripts/stickyNavbar.js"></script>
+        <script type="text/javascript" src="scripts/secret.js"></script>
+
+    </body>
+</html>
