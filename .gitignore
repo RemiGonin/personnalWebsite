@@ -2,3 +2,4 @@
 package-lock.json
 checklist.xlsx
 .htaccess
+/node_modules
