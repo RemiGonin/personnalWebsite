@@ -84,7 +84,7 @@ p#etudiant {
 }
 
 .triangleInv {
-  --color:rgba(255, 193, 7, 1);
+  --color: rgba(255, 193, 7, 1);
   -webkit-text-stroke: 12px var(--color);
   font-size: 200px;
   color: transparent;
@@ -104,7 +104,7 @@ p#etudiant {
 }
 
 .triangle {
-  --color:rgba(255, 193, 7, 1);
+  --color: rgba(255, 193, 7, 1);
   -webkit-text-stroke: 12px var(--color);
   font-size: 200px;
   color: transparent;
@@ -233,7 +233,7 @@ p#etudiant {
 }
 
 .projetG ul.listeCompetencesG {
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -309,7 +309,7 @@ p#etudiant {
 }
 
 .projetD ul.listeCompetencesD {
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -441,7 +441,10 @@ p#etudiant {
   padding-left: 1%;
 }
 
-#formation #poly, #formation #emse, #formation #prepa, #formation #lycee {
+#formation #poly,
+#formation #emse,
+#formation #prepa,
+#formation #lycee {
   -ms-grid-columns: (1fr)[100];
       grid-template-columns: repeat(100, 1fr);
   display: -ms-grid;
@@ -452,7 +455,10 @@ p#etudiant {
   transition: all 0.1s ease-in-out;
 }
 
-#formation #poly.hoverstate, #formation #emse.hoverstate, #formation #prepa.hoverstate, #formation #lycee.hoverstate {
+#formation #poly.hoverstate,
+#formation #emse.hoverstate,
+#formation #prepa.hoverstate,
+#formation #lycee.hoverstate {
   -webkit-box-shadow: 0 0 10px rgba(49, 49, 49, 0.8);
           box-shadow: 0 0 10px rgba(49, 49, 49, 0.8);
 }
@@ -709,7 +715,9 @@ p#etudiant {
   grid-column: 80/100;
 }
 
-#experiences #CET, #experiences #porcher, #experiences #ostria {
+#experiences #CET,
+#experiences #porcher,
+#experiences #ostria {
   -ms-grid-columns: (1fr)[100];
       grid-template-columns: repeat(100, 1fr);
   display: -ms-grid;
@@ -720,7 +728,9 @@ p#etudiant {
   transition: all 0.1s ease-in-out;
 }
 
-#experiences #CET:hover, #experiences #porcher:hover, #experiences #ostria:hover {
+#experiences #CET:hover,
+#experiences #porcher:hover,
+#experiences #ostria:hover {
   -webkit-box-shadow: 0 0 10px rgba(49, 49, 49, 0.8);
           box-shadow: 0 0 10px rgba(49, 49, 49, 0.8);
 }
@@ -803,7 +813,9 @@ p#etudiant {
   grid-column: 80/100;
 }
 
-#assos #BDE, #assos #MEP, #assos #astronoMines {
+#assos #BDE,
+#assos #MEP,
+#assos #astronoMines {
   -ms-grid-columns: (1fr)[100];
       grid-template-columns: repeat(100, 1fr);
   display: -ms-grid;
@@ -814,7 +826,9 @@ p#etudiant {
   transition: all 0.1s ease-in-out;
 }
 
-#assos #BDE:hover, #assos #MEP:hover, #assos #astronoMines:hover {
+#assos #BDE:hover,
+#assos #MEP:hover,
+#assos #astronoMines:hover {
   -webkit-box-shadow: 0 0 10px rgba(49, 49, 49, 0.8);
           box-shadow: 0 0 10px rgba(49, 49, 49, 0.8);
 }
@@ -969,6 +983,28 @@ p#etudiant {
   background-color: var(--bodyBackgroundColor);
   -webkit-clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
           clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+}
+
+#grillePathfinding {
+  height: 100vh;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (1fr)[var];
+      grid-template-columns: repeat(var(--grid-width), 1fr);
+  -ms-grid-rows: (1fr)[var];
+      grid-template-rows: repeat(var(--grid-heigth), 1fr);
+  overflow: hidden;
+}
+
+.grid-item {
+  border: 1px solid #4b4b4b;
+  text-align: center;
+}
+
+.grid-item::before {
+  content: "";
+  display: block;
+  padding-top: 100%;
 }
 
 :root {
