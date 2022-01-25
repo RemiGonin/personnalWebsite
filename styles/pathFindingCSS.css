@@ -6,11 +6,6 @@
     overflow: hidden;
 }
 
-.grid-item {
-    border: 1px solid rgb(75, 75, 75);
-    text-align: center;
-}
-
 /* pour faire des carrés */
 .grid-item::before {
     content: "";

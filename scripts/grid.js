@@ -6,10 +6,10 @@ function Grid(height, width) {
 Grid.prototype.buildCells = function (height, width) {
     var i, j;
 
-    const cells = array(height);
+    const cells = [];
 
     for (i = 0; i < height; ++i) {
-        cells[i] = array(width);
+        cells[i] = [];
         for (j = 0; j < height; ++j) {
             cells[i][j] = new Cell(i, j, false);
         }

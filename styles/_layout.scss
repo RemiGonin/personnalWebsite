@@ -889,3 +889,19 @@ p#etudiant {
         clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
     }
 }
+
+//PATHFINDING
+#grillePathfinding {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(var(--grid-width), 1fr);
+    grid-template-rows: repeat(var(--grid-heigth), 1fr);
+    overflow: hidden;
+}
+
+/* pour faire des carrés */
+.grid-item::before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+}

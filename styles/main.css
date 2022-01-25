@@ -1,3 +1,4 @@
+@charset "UTF-8";
 html {
   scroll-behavior: smooth;
 }
@@ -996,11 +997,7 @@ p#etudiant {
   overflow: hidden;
 }
 
-.grid-item {
-  border: 1px solid #4b4b4b;
-  text-align: center;
-}
-
+/* pour faire des carrés */
 .grid-item::before {
   content: "";
   display: block;
