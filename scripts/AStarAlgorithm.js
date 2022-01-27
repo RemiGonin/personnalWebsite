@@ -1,13 +1,13 @@
 //A* implementation
 
-import Heap from "heap-js"; //we use a priority queue to have O(1) time complexity for each loop (else we would have to sort at nlogn time complexity for each loop)
-
+//we use a priority queue to have O(1) time complexity for each loop (else we would have to sort at nlogn time complexity for each loop) from heap.js script
 function AStarAlgorithm(startX, startY, goalX, goalY, grid) {
     startNode = grid.getCellAt(startX, startY);
     startNode.g = 0;
-    startNode.f = euclidianDistance(startNode, goalNode) + 0; //g for the first node is set at 0
 
     goalNode = grid.getCellAt(goalX, goalY);
+
+    startNode.f = euclidianDistance(startNode, goalNode) + 0; //g for the first node is set at 0
 
     cameFrom = [];
 
@@ -19,8 +19,8 @@ function AStarAlgorithm(startX, startY, goalX, goalY, grid) {
             return -1;
         }
     };
-    const openSet = new Heap(customPriorityComparator);
-    openSet.init(startNode);
+    var openSet = new Heap(customPriorityComparator);
+    openSet.push(startNode);
 
     // var bestGScore =
     while (!openSet.empty()) {
@@ -44,13 +44,13 @@ function AStarAlgorithm(startX, startY, goalX, goalY, grid) {
                 neighbor.cameFrom = currentNode;
 
                 if (!openSet.contains(neighbor, 0)) {
-                    openSet.add(neighbor);
+                    openSet.push(neighbor);
                 }
             }
         }
     }
 
-    //TODO : return fail ?
+    console.log("aled");
 }
 
 function reconstructPath(goalNode, startNode) {

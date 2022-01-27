@@ -31,23 +31,24 @@ Grid.prototype.getCellAt = function (x, y) {
 };
 
 Grid.prototype.getObstructionAt = function (x, y) {
-    return cells[x][y].obstructed;
+    return this.cells[x][y].obstructed;
 };
 
 Grid.prototype.isInsideGridAt = function (x, y) {
-    if (x <= this.height && x >= 0 && x <= this.width && x >= 0) {
-        return True;
+    if (x < this.width && x >= 0 && y < this.height && x >= 0) {
+        return true;
     } else {
-        return False;
+        return false;
     }
 };
 
 Grid.prototype.isWalkableAt = function (x, y) {
-    if (this.isInsideGridAt(x, y) == True && this.getObstructionAt(x, y) == False) {
-        return True;
-    } else {
-        return False;
+    if (this.isInsideGridAt(x, y) == true) {
+        if (this.getObstructionAt(x, y) == false) {
+            return true;
+        }
     }
+    return false;
 };
 
 Grid.prototype.getNeighbors = function (cell) {

@@ -905,3 +905,11 @@ p#etudiant {
     display: block;
     padding-top: 100%;
 }
+
+#clickMe {
+    position: absolute;
+    background-color: white;
+    z-index: 40;
+    top: 40px;
+    color: red;
+}

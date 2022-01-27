@@ -1004,6 +1004,14 @@ p#etudiant {
   padding-top: 100%;
 }
 
+#clickMe {
+  position: absolute;
+  background-color: white;
+  z-index: 40;
+  top: 40px;
+  color: red;
+}
+
 :root {
   --headerColor: #ffc107;
   --bodyBackgroundColor: #262626;
