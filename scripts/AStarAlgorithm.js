@@ -1,72 +1,195 @@
-//A* implementation
+const grillePathfinding = document.getElementById("grillePathfinding");
 
-//we use a priority queue to have O(1) time complexity for each loop (else we would have to sort at nlogn time complexity for each loop) from heap.js script
-function AStarAlgorithm(startX, startY, goalX, goalY, grid) {
-    startNode = grid.getCellAt(startX, startY);
-    startNode.g = 0;
+function makeGrid(height, width) {
+    grillePathfinding.style.setProperty("--grid-heigth", height);
+    grillePathfinding.style.setProperty("--grid-width", width);
 
-    goalNode = grid.getCellAt(goalX, goalY);
+    for (y = 0; y < height; y++) {
+        for (x = 0; x < width; x++) {
+            let cell = document.createElement("cell");
+            cell.id = "x" + x.toString() + "y" + y.toString();
+            cell.style.border = "1px solid rgb(75, 75, 75)";
+            cell.style.backgroundColor = View.cellStyle.normalCell.color;
 
-    startNode.f = euclidianDistance(startNode, goalNode) + 0; //g for the first node is set at 0
-
-    cameFrom = [];
-
-    //priority is f, lowest f at the top of the queue :
-    const customPriorityComparator = (node1, node2) => {
-        if (node1.f > node2.f) {
-            return 1;
-        } else if (node1.f <= node2.f) {
-            return -1;
+            grillePathfinding.appendChild(cell).className = "grid-item";
         }
-    };
-    var openSet = new Heap(customPriorityComparator);
-    openSet.push(startNode);
+    }
+}
 
-    // var bestGScore =
-    while (!openSet.empty()) {
-        currentNode = openSet.pop();
+function toGridCoords(x, y) {
+    return "x" + Math.round(x).toString() + "y" + Math.round(y).toString();
+}
 
-        if (currentNode == goalNode) {
-            return reconstructPath(goalNode, startNode);
-        }
+function toScreenCoords() {
+    x = (View.width / window.innerWidth) * (event.pageX - window.innerWidth / (2 * View.width));
+    y = (View.height / window.innerHeight) * (event.pageY - window.innerHeight / (2 * View.height));
+    x = Math.round(x);
+    y = Math.round(y);
+    return x, y;
+}
 
-        nb = grid.getNeighbors(currentNode);
-        for (i = 0, l = nb.length; i < l; ++i) {
-            neighbor = nb[i];
+function setStartPos(x, y, grid) {
+    cell = document.getElementById(toGridCoords(x, y));
+    cell.style.backgroundColor = View.cellStyle.startCell.color;
+    grid.getCellAt(x, y).start = true;
+}
 
-            if (!neighbor.hasOwnProperty("g")) {
-                neighbor.g = Infinity; // If a cell hasn't been opened yet, it will not have a g score, we set it to infinity here.
-            }
+function setGoalPos(x, y) {
+    cell = document.getElementById(toGridCoords(x, y));
+    cell.style.backgroundColor = View.cellStyle.goalCell.color;
+    grid.getCellAt(x, y).goal = true;
+}
 
-            if (currentNode.g + 1 < neighbor.g) {
-                neighbor.g = currentNode.g + 1;
-                neighbor.f = currentNode.g + 1 + euclidianDistance(neighbor, goalNode);
-                neighbor.cameFrom = currentNode;
+function styleOnHover(event) {
+    // clear hover effect of cell that we left
+    xpos = event.pageX;
+    ypos = event.pageY;
+    // get cell coords (everything is offest by 1/2 of a cell's height and width to apply effect perfectly when cell is entered)
+    x = (View.width / window.innerWidth) * (xpos - window.innerWidth / (2 * View.width));
+    y = (View.height / window.innerHeight) * (ypos - window.innerHeight / (2 * View.height));
 
-                if (!openSet.contains(neighbor, 0)) {
-                    openSet.push(neighbor);
-                }
-            }
+    // change cell style
+
+    cell = document.getElementById(toGridCoords(x, y));
+
+    cell.style.backgroundColor = "red";
+
+    cell.addEventListener("mouseleave", (e) => {
+        cell.style.backgroundColor = "green";
+    });
+}
+
+function listenForInteractivity() {
+    //prevent elements from being draggable, which can cause problems when placing walls
+    window.addEventListener("dragstart", (e) => {
+        e.preventDefault();
+    });
+
+    window.addEventListener("drop", (e) => {
+        e.preventDefault();
+    });
+
+    function placeWalls(x, y, grid) {
+        cell = document.getElementById(toGridCoords(x, y));
+        if (!grid.getCellAt(x, y).obstructed && !grid.getCellAt(x, y).start && !grid.getCellAt(x, y).goal) {
+            cell.style.backgroundColor = View.cellStyle.obstructedCell.color;
+            grid.getCellAt(x, y).obstructed = true;
         }
     }
 
-    console.log("aled");
-}
+    function removeWalls(x, y, grid) {
+        cell = document.getElementById(toGridCoords(x, y));
 
-function reconstructPath(goalNode, startNode) {
-    path = [goalNode];
-    currentNode = goalNode;
-
-    while (!(currentNode === startNode)) {
-        //we follow the path from goal to start by following previous nodes each time
-        currentNode = currentNode.cameFrom;
-        path.push(currentNode);
+        if (grid.getCellAt(x, y).obstructed && !grid.getCellAt(x, y).start && !grid.getCellAt(x, y).goal) {
+            cell.style.backgroundColor = View.cellStyle.normalCell.color;
+            grid.getCellAt(x, y).obstructed = false;
+        }
     }
 
-    return path;
+    //placing and removing walls :
+    window.addEventListener("pointerdown", function pointerdownFunc(event) {
+        x, (y = toScreenCoords());
+
+        placeWall = false;
+        removeWall = false;
+        if (!grid.getCellAt(x, y).obstructed) {
+            placeWall = true;
+            placeWalls(x, y, grid);
+        } else {
+            removeWall = true;
+            removeWalls(x, y, grid);
+        }
+
+        window.addEventListener("pointermove", function pointerMoveFunc(event2) {
+            x, (y = toScreenCoords());
+
+            if (placeWall == true) {
+                placeWalls(x, y, grid);
+            }
+            if (removeWall == true) {
+                removeWalls(x, y, grid);
+            }
+        });
+
+        window.addEventListener("pointerup", function pointerUpFunc(e) {
+            placeWall = false;
+            removeWall = false;
+        });
+    });
 }
 
-//function to calculate euclidian distance between two nodes, corresponds to h in A*
-function euclidianDistance(cellA, cellB) {
-    return Math.sqrt(Math.pow(cellA.x - cellB.x, 2) + Math.pow(cellA.y - cellB.y, 2));
+function getWidth(height) {
+    //since we define grid items as squares in our css, we need to get the number of columns by calculating from the number of rows
+    return (Math.round((window.innerWidth / window.innerHeight) * 10) / 10) * height;
 }
+
+var View = {
+    height: 40, //number of rows
+
+    width: getWidth(40),
+
+    cellStyle: {
+        startCell: {
+            color: "green",
+        },
+
+        goalCell: {
+            color: "red",
+        },
+
+        normalCell: {
+            color: "#262626",
+        },
+
+        obstructedCell: {
+            color: "black",
+        },
+
+        border: {
+            color: "rgb(75, 75, 75)",
+        },
+
+        inOpenSet: {
+            color: "yellow",
+        },
+
+        inClosedSet: {
+            color: "purple",
+        },
+    },
+};
+
+//create visual grid
+makeGrid(View.height, View.width);
+
+//create js grid (a matrix)
+grid = new Grid(View.height, View.width);
+
+startX = Math.round(View.width / 6);
+startY = Math.round(View.height / 2);
+goalX = Math.round(View.width / 1.2);
+goalY = Math.round(View.height / 2);
+
+setStartPos(startX, startY, grid);
+setGoalPos(goalX, goalY, grid);
+
+listenForInteractivity();
+// grid.cells[25][20].obstructed = true;
+// grid.cells[25][19].obstructed = true;
+// grid.cells[25][21].obstructed = true;
+
+function launchAlgorithm(alg) {
+    if (alg == "AStar") {
+        console.log("a");
+        path = AStarAlgorithm(startX, startY, goalX, goalY, grid);
+        path.forEach((cell) => {
+            cell = document.getElementById(toGridCoords(cell.x, cell.y));
+            cell.style.backgroundColor = View.cellStyle.inOpenSet.color;
+        });
+    }
+}
+
+// document.getElementById("clickMe").onclick = launchAlgorithm("AStar");
+document.getElementById("clickMe").addEventListener("click", function () {
+    launchAlgorithm("AStar");
+});

@@ -59,63 +59,21 @@ function styleOnHover(event) {
     });
 }
 
-function listenForInteractivity() {
-    //prevent elements from being draggable, which can cause problems when placing walls
-    window.addEventListener("dragstart", (e) => {
-        e.preventDefault();
-    });
-
-    window.addEventListener("drop", (e) => {
-        e.preventDefault();
-    });
-
-    function placeWalls(x, y, grid) {
-        cell = document.getElementById(toGridCoords(x, y));
-        if (!grid.getCellAt(x, y).obstructed && !grid.getCellAt(x, y).start && !grid.getCellAt(x, y).goal) {
-            cell.style.backgroundColor = View.cellStyle.obstructedCell.color;
-            grid.getCellAt(x, y).obstructed = true;
-        }
+function placeWalls(x, y, grid) {
+    cell = document.getElementById(toGridCoords(x, y));
+    if (!grid.getCellAt(x, y).obstructed && !grid.getCellAt(x, y).start && !grid.getCellAt(x, y).goal) {
+        cell.style.backgroundColor = View.cellStyle.obstructedCell.color;
+        grid.getCellAt(x, y).obstructed = true;
     }
+}
 
-    function removeWalls(x, y, grid) {
-        cell = document.getElementById(toGridCoords(x, y));
+function removeWalls(x, y, grid) {
+    cell = document.getElementById(toGridCoords(x, y));
 
-        if (grid.getCellAt(x, y).obstructed && !grid.getCellAt(x, y).start && !grid.getCellAt(x, y).goal) {
-            cell.style.backgroundColor = View.cellStyle.normalCell.color;
-            grid.getCellAt(x, y).obstructed = false;
-        }
+    if (grid.getCellAt(x, y).obstructed && !grid.getCellAt(x, y).start && !grid.getCellAt(x, y).goal) {
+        cell.style.backgroundColor = View.cellStyle.normalCell.color;
+        grid.getCellAt(x, y).obstructed = false;
     }
-
-    //placing and removing walls :
-    window.addEventListener("pointerdown", function pointerdownFunc(event) {
-        x, (y = toScreenCoords());
-
-        placeWall = false;
-        removeWall = false;
-        if (!grid.getCellAt(x, y).obstructed) {
-            placeWall = true;
-            placeWalls(x, y, grid);
-        } else {
-            removeWall = true;
-            removeWalls(x, y, grid);
-        }
-
-        window.addEventListener("pointermove", function pointerMoveFunc(event2) {
-            x, (y = toScreenCoords());
-
-            if (placeWall == true) {
-                placeWalls(x, y, grid);
-            }
-            if (removeWall == true) {
-                removeWalls(x, y, grid);
-            }
-        });
-
-        window.addEventListener("pointerup", function pointerUpFunc(e) {
-            placeWall = false;
-            removeWall = false;
-        });
-    });
 }
 
 function getWidth(height) {
@@ -165,31 +123,45 @@ makeGrid(View.height, View.width);
 //create js grid (a matrix)
 grid = new Grid(View.height, View.width);
 
-startX = Math.round(View.width / 6);
-startY = Math.round(View.height / 2);
-goalX = Math.round(View.width / 1.2);
-goalY = Math.round(View.height / 2);
+setStartPos(Math.round(View.width / 6), Math.round(View.height / 2), grid);
+setGoalPos(Math.round(View.width / 1.2), Math.round(View.height / 2), grid);
 
-setStartPos(startX, startY, grid);
-setGoalPos(goalX, goalY, grid);
+//prevent elements from being draggable, which can cause problems when placing walls
+window.addEventListener("dragstart", (e) => {
+    e.preventDefault();
+});
 
-listenForInteractivity();
-// grid.cells[25][20].obstructed = true;
-// grid.cells[25][19].obstructed = true;
-// grid.cells[25][21].obstructed = true;
+window.addEventListener("drop", (e) => {
+    e.preventDefault();
+});
 
-function launchAlgorithm(alg) {
-    if (alg == "AStar") {
-        console.log("a");
-        path = AStarAlgorithm(startX, startY, goalX, goalY, grid);
-        path.forEach((cell) => {
-            cell = document.getElementById(toGridCoords(cell.x, cell.y));
-            cell.style.backgroundColor = View.cellStyle.inOpenSet.color;
-        });
+//placing and removing walls :
+window.addEventListener("pointerdown", function pointerdownFunc(event) {
+    x, (y = toScreenCoords());
+
+    placeWall = false;
+    removeWall = false;
+    if (!grid.getCellAt(x, y).obstructed) {
+        placeWall = true;
+        placeWalls(x, y, grid);
+    } else {
+        removeWall = true;
+        removeWalls(x, y, grid);
     }
-}
 
-// document.getElementById("clickMe").onclick = launchAlgorithm("AStar");
-document.getElementById("clickMe").addEventListener("click", function () {
-    launchAlgorithm("AStar");
+    window.addEventListener("pointermove", function pointerMoveFunc(event2) {
+        x, (y = toScreenCoords());
+
+        if (placeWall == true) {
+            placeWalls(x, y, grid);
+        }
+        if (removeWall == true) {
+            removeWalls(x, y, grid);
+        }
+    });
+
+    window.addEventListener("pointerup", function pointerUpFunc(e) {
+        placeWall = false;
+        removeWall = false;
+    });
 });
