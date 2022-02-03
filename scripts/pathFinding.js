@@ -148,7 +148,8 @@ var View = {
 makeGrid(View.height, View.width);
 
 //create js grid (a matrix)
-grid = new Grid(View.height, View.width);
+diagonal = true;
+grid = new Grid(View.height, View.width, true);
 
 startX = Math.round(View.width / 6);
 startY = Math.round(View.height / 2);
