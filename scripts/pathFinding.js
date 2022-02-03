@@ -1,17 +1,17 @@
-const grillePathfinding = document.getElementById("grillePathfinding");
+const gridPathfinding = document.getElementById("gridPathfinding");
 
 function makeGrid(height, width) {
-    grillePathfinding.style.setProperty("--grid-heigth", height);
-    grillePathfinding.style.setProperty("--grid-width", width);
+    gridPathfinding.style.setProperty("--grid-heigth", height);
+    gridPathfinding.style.setProperty("--grid-width", width);
 
     for (y = 0; y < height; y++) {
         for (x = 0; x < width; x++) {
-            let cell = document.createElement("cell");
-            cell.id = "x" + x.toString() + "y" + y.toString();
-            cell.style.border = "1px solid rgb(75, 75, 75)";
-            cell.style.backgroundColor = View.cellStyle.normalCell.color;
+            let CSScell = document.createElement("cell");
+            CSScell.id = "x" + x.toString() + "y" + y.toString();
+            CSScell.style.border = "1px solid rgb(75, 75, 75)";
+            CSScell.style.backgroundColor = View.cellStyle.normalCell.color;
 
-            grillePathfinding.appendChild(cell).className = "grid-item";
+            gridPathfinding.appendChild(CSScell).className = "grid-item";
         }
     }
 }
@@ -29,34 +29,15 @@ function toScreenCoords() {
 }
 
 function setStartPos(x, y, grid) {
-    cell = document.getElementById(toGridCoords(x, y));
-    cell.style.backgroundColor = View.cellStyle.startCell.color;
+    CSScell = document.getElementById(toGridCoords(x, y));
+    CSScell.style.backgroundColor = View.cellStyle.startCell.color;
     grid.getCellAt(x, y).start = true;
 }
 
 function setGoalPos(x, y) {
-    cell = document.getElementById(toGridCoords(x, y));
-    cell.style.backgroundColor = View.cellStyle.goalCell.color;
+    CSScell = document.getElementById(toGridCoords(x, y));
+    CSScell.style.backgroundColor = View.cellStyle.goalCell.color;
     grid.getCellAt(x, y).goal = true;
-}
-
-function styleOnHover(event) {
-    // clear hover effect of cell that we left
-    xpos = event.pageX;
-    ypos = event.pageY;
-    // get cell coords (everything is offest by 1/2 of a cell's height and width to apply effect perfectly when cell is entered)
-    x = (View.width / window.innerWidth) * (xpos - window.innerWidth / (2 * View.width));
-    y = (View.height / window.innerHeight) * (ypos - window.innerHeight / (2 * View.height));
-
-    // change cell style
-
-    cell = document.getElementById(toGridCoords(x, y));
-
-    cell.style.backgroundColor = "red";
-
-    cell.addEventListener("mouseleave", (e) => {
-        cell.style.backgroundColor = "green";
-    });
 }
 
 function listenForInteractivity() {
@@ -70,18 +51,18 @@ function listenForInteractivity() {
     });
 
     function placeWalls(x, y, grid) {
-        cell = document.getElementById(toGridCoords(x, y));
+        CSScell = document.getElementById(toGridCoords(x, y));
         if (!grid.getCellAt(x, y).obstructed && !grid.getCellAt(x, y).start && !grid.getCellAt(x, y).goal) {
-            cell.style.backgroundColor = View.cellStyle.obstructedCell.color;
+            CSScell.style.backgroundColor = View.cellStyle.obstructedCell.color;
             grid.getCellAt(x, y).obstructed = true;
         }
     }
 
     function removeWalls(x, y, grid) {
-        cell = document.getElementById(toGridCoords(x, y));
+        CSScell = document.getElementById(toGridCoords(x, y));
 
         if (grid.getCellAt(x, y).obstructed && !grid.getCellAt(x, y).start && !grid.getCellAt(x, y).goal) {
-            cell.style.backgroundColor = View.cellStyle.normalCell.color;
+            CSScell.style.backgroundColor = View.cellStyle.normalCell.color;
             grid.getCellAt(x, y).obstructed = false;
         }
     }
@@ -130,7 +111,7 @@ var View = {
 
     cellStyle: {
         startCell: {
-            color: "green",
+            color: "chartreuse",
         },
 
         goalCell: {
@@ -150,11 +131,15 @@ var View = {
         },
 
         inOpenSet: {
-            color: "yellow",
+            color: "#1c7100",
         },
 
         inClosedSet: {
-            color: "purple",
+            color: "lightblue",
+        },
+
+        inPath: {
+            color: "yellow",
         },
     },
 };
@@ -174,22 +159,70 @@ setStartPos(startX, startY, grid);
 setGoalPos(goalX, goalY, grid);
 
 listenForInteractivity();
-// grid.cells[25][20].obstructed = true;
-// grid.cells[25][19].obstructed = true;
-// grid.cells[25][21].obstructed = true;
 
 function launchAlgorithm(alg) {
     if (alg == "AStar") {
-        console.log("a");
-        path = AStarAlgorithm(startX, startY, goalX, goalY, grid);
-        path.forEach((cell) => {
-            cell = document.getElementById(toGridCoords(cell.x, cell.y));
-            cell.style.backgroundColor = View.cellStyle.inOpenSet.color;
-        });
+        //clear previous path
+        if (typeof hasBeenLaunched !== "undefined") {
+            if (path != 1) {
+                grid.cells.forEach((cellRow) => {
+                    cellRow.forEach((cell) => {
+                        CSScell = document.getElementById(toGridCoords(cell.x, cell.y));
+                        if (cell.obstructed) {
+                            CSScell.style.backgroundColor = View.cellStyle.obstructedCell.color;
+                        } else if (cell.start) {
+                            CSScell.style.backgroundColor = View.cellStyle.startCell.color;
+                        } else if (cell.goal) {
+                            CSScell.style.backgroundColor = View.cellStyle.goalCell.color;
+                        } else {
+                            CSScell.style.backgroundColor = View.cellStyle.normalCell.color;
+                        }
+                    });
+                });
+            }
+        }
+
+        returnValues = AStarAlgorithmOneIteration(startX, startY, goalX, goalY, grid, "firstTime");
+        state = returnValues[0];
+        data = returnValues[1];
+
+        clockAStar = setInterval(runOneIterationAStar, 1);
+
+        function runOneIterationAStar() {
+            if (state == 1) {
+                //fail
+                clearInterval(clockAStar);
+                return 1;
+            } else if (state == 0) {
+                //success
+                hasBeenLaunched = true;
+                path = data;
+                //show path
+                path.forEach((cell) => {
+                    CSScell = document.getElementById(toGridCoords(cell.x, cell.y));
+                    CSScell.style.backgroundColor = View.cellStyle.inPath.color;
+                });
+                clearInterval(clockAStar);
+                return 1;
+            } else if (state == 2) {
+                //continue
+                openSet = data;
+
+                openSet.nodes.forEach((cell) => {
+                    if (!cell.goal || cell.start) {
+                        CSScell = document.getElementById(toGridCoords(cell.x, cell.y));
+                        CSScell.style.backgroundColor = View.cellStyle.inOpenSet.color;
+                    }
+                });
+
+                returnValues = AStarAlgorithmOneIteration(startX, startY, goalX, goalY, grid, openSet);
+                state = returnValues[0];
+                data = returnValues[1];
+            }
+        }
     }
 }
 
-// document.getElementById("clickMe").onclick = launchAlgorithm("AStar");
-document.getElementById("clickMe").addEventListener("click", function () {
+document.getElementById("startSearch").addEventListener("click", function () {
     launchAlgorithm("AStar");
 });

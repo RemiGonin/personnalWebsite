@@ -35,7 +35,7 @@ Grid.prototype.getObstructionAt = function (x, y) {
 };
 
 Grid.prototype.isInsideGridAt = function (x, y) {
-    if (x < this.width && x >= 0 && y < this.height && x >= 0) {
+    if (x < this.width && x >= 0 && y < this.height && y >= 0) {
         return true;
     } else {
         return false;

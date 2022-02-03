@@ -891,7 +891,7 @@ p#etudiant {
 }
 
 //PATHFINDING
-#grillePathfinding {
+#gridPathfinding {
     height: 100vh;
     display: grid;
     grid-template-columns: repeat(var(--grid-width), 1fr);
@@ -906,10 +906,11 @@ p#etudiant {
     padding-top: 100%;
 }
 
-#clickMe {
+#startSearch {
     position: absolute;
     background-color: white;
-    z-index: 40;
     top: 40px;
     color: black;
+    padding: 5px;
+    color: rgba(151, 255, 151, 0.582);
 }
