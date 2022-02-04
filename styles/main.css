@@ -1004,12 +1004,48 @@ p#etudiant {
   padding-top: 100%;
 }
 
-#startSearch {
+#controller {
   position: absolute;
-  background-color: white;
-  top: 40px;
+  z-index: 9;
+  top: 50px;
+  left: 50px;
+  background-color: black;
+  text-align: center;
+}
+
+#controllerHeader {
+  background-color: beige;
   color: black;
-  padding: 5px;
+  cursor: move;
+  z-index: 10;
+  padding: 10px;
+}
+
+#startSearch {
+  border-style: solid;
+  border-color: #333333;
+  background-color: #3d3d3d;
+  color: white;
+  padding: 4px;
+  margin: 5px;
+}
+
+#clearWalls {
+  border-style: solid;
+  border-color: #333333;
+  background-color: #3d3d3d;
+  color: white;
+  padding: 4px;
+  margin: 5px;
+}
+
+#divDiagonal {
+  border-style: solid;
+  border-color: #333333;
+  background-color: #3d3d3d;
+  color: white;
+  padding: 4px;
+  margin: 5px;
 }
 
 :root {

@@ -1,8 +1,7 @@
-function Grid(height, width, diagonal) {
+function Grid(height, width) {
     this.width = width; // number of columns of the grid
     this.height = height; //number of rows of the grid
     this.cells = this.buildCells(this.height, this.width);
-    this.diagonal = diagonal;
 }
 
 Grid.prototype.buildCells = function (height, width) {
@@ -51,7 +50,7 @@ Grid.prototype.isWalkableAt = function (x, y) {
     return false;
 };
 
-Grid.prototype.getNeighbors = function (cell) {
+Grid.prototype.getNeighbors = function (cell, diagonal) {
     nb = [];
     x = cell.x;
     y = cell.y;
@@ -72,7 +71,7 @@ Grid.prototype.getNeighbors = function (cell) {
         nb.push(this.getCellAt(x, y - 1));
     }
 
-    if (self.diagonal) {
+    if (diagonal) {
         if (this.isWalkableAt(x + 1, y + 1)) {
             nb.push(this.getCellAt(x + 1, y + 1));
         }

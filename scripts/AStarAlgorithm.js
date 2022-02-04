@@ -55,7 +55,7 @@ function AStarAlgorithm(startX, startY, goalX, goalY, grid) {
     return 1;
 }
 
-function AStarAlgorithmOneIteration(startX, startY, goalX, goalY, grid, openSet) {
+function AStarAlgorithmOneIteration(startX, startY, goalX, goalY, grid, openSet, diagonal) {
     //if first call to function
     if (openSet == "firstTime") {
         for (y = 0; y < grid.height; y++) {
@@ -92,7 +92,7 @@ function AStarAlgorithmOneIteration(startX, startY, goalX, goalY, grid, openSet)
         return [0, reconstructPath(goalNode, startNode)];
     }
 
-    nb = grid.getNeighbors(currentNode);
+    nb = grid.getNeighbors(currentNode, diagonal);
     for (i = 0, l = nb.length; i < l; ++i) {
         neighbor = nb[i];
 

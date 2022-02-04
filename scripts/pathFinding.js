@@ -40,14 +40,51 @@ function setGoalPos(x, y) {
     grid.getCellAt(x, y).goal = true;
 }
 
-function listenForInteractivity() {
-    //prevent elements from being draggable, which can cause problems when placing walls
-    window.addEventListener("dragstart", (e) => {
-        e.preventDefault();
-    });
+function clearGrid(grid, clearWalls) {
+    grid.cells.forEach((cellRow) => {
+        cellRow.forEach((cell) => {
+            CSScell = document.getElementById(toGridCoords(cell.x, cell.y));
 
-    window.addEventListener("drop", (e) => {
-        e.preventDefault();
+            if (clearWalls) {
+                if (cell.obstructed) {
+                    CSScell.style.backgroundColor = View.cellStyle.normalCell.color;
+                } else if (cell.start) {
+                    CSScell.style.backgroundColor = View.cellStyle.startCell.color;
+                } else if (cell.goal) {
+                    CSScell.style.backgroundColor = View.cellStyle.goalCell.color;
+                } else {
+                    CSScell.style.backgroundColor = View.cellStyle.normalCell.color;
+                }
+                cell.obstructed = false;
+            } else {
+                if (cell.obstructed) {
+                    CSScell.style.backgroundColor = View.cellStyle.obstructedCell.color;
+                } else if (cell.start) {
+                    CSScell.style.backgroundColor = View.cellStyle.startCell.color;
+                } else if (cell.goal) {
+                    CSScell.style.backgroundColor = View.cellStyle.goalCell.color;
+                } else {
+                    CSScell.style.backgroundColor = View.cellStyle.normalCell.color;
+                }
+            }
+        });
+    });
+}
+
+function listenForInteractivity(grid) {
+    //prevent grid elements from being draggable, which can cause problems when placing walls
+    grid.cells.forEach((cellRow) => {
+        cellRow.forEach((cell) => {
+            CSScell = document.getElementById(toGridCoords(cell.x, cell.y));
+
+            CSScell.addEventListener("dragstart", (e) => {
+                e.preventDefault();
+            });
+
+            CSScell.addEventListener("drop", (e) => {
+                e.preventDefault();
+            });
+        });
     });
 
     function placeWalls(x, y, grid) {
@@ -148,8 +185,7 @@ var View = {
 makeGrid(View.height, View.width);
 
 //create js grid (a matrix)
-diagonal = true;
-grid = new Grid(View.height, View.width, true);
+grid = new Grid(View.height, View.width);
 
 startX = Math.round(View.width / 6);
 startY = Math.round(View.height / 2);
@@ -159,31 +195,18 @@ goalY = Math.round(View.height / 2);
 setStartPos(startX, startY, grid);
 setGoalPos(goalX, goalY, grid);
 
-listenForInteractivity();
+listenForInteractivity(grid);
 
-function launchAlgorithm(alg) {
+function launchAlgorithm(alg, diagonal) {
     if (alg == "AStar") {
         //clear previous path
         if (typeof hasBeenLaunched !== "undefined") {
             if (path != 1) {
-                grid.cells.forEach((cellRow) => {
-                    cellRow.forEach((cell) => {
-                        CSScell = document.getElementById(toGridCoords(cell.x, cell.y));
-                        if (cell.obstructed) {
-                            CSScell.style.backgroundColor = View.cellStyle.obstructedCell.color;
-                        } else if (cell.start) {
-                            CSScell.style.backgroundColor = View.cellStyle.startCell.color;
-                        } else if (cell.goal) {
-                            CSScell.style.backgroundColor = View.cellStyle.goalCell.color;
-                        } else {
-                            CSScell.style.backgroundColor = View.cellStyle.normalCell.color;
-                        }
-                    });
-                });
+                clearGrid(grid, false);
             }
         }
 
-        returnValues = AStarAlgorithmOneIteration(startX, startY, goalX, goalY, grid, "firstTime");
+        returnValues = AStarAlgorithmOneIteration(startX, startY, goalX, goalY, grid, "firstTime", diagonal);
         state = returnValues[0];
         data = returnValues[1];
 
@@ -210,13 +233,19 @@ function launchAlgorithm(alg) {
                 openSet = data;
 
                 openSet.nodes.forEach((cell) => {
-                    if (!cell.goal || cell.start) {
+                    if (!(cell.goal || cell.start)) {
                         CSScell = document.getElementById(toGridCoords(cell.x, cell.y));
                         CSScell.style.backgroundColor = View.cellStyle.inOpenSet.color;
                     }
                 });
 
-                returnValues = AStarAlgorithmOneIteration(startX, startY, goalX, goalY, grid, openSet);
+                exploredCell = openSet.nodes[0];
+                if (!(exploredCell.goal || exploredCell.start)) {
+                    CSScell = document.getElementById(toGridCoords(exploredCell.x, exploredCell.y));
+                    CSScell.style.backgroundColor = View.cellStyle.inClosedSet.color;
+                }
+
+                returnValues = AStarAlgorithmOneIteration(startX, startY, goalX, goalY, grid, openSet, diagonal);
                 state = returnValues[0];
                 data = returnValues[1];
             }
@@ -224,6 +253,56 @@ function launchAlgorithm(alg) {
     }
 }
 
+// Controller
+
 document.getElementById("startSearch").addEventListener("click", function () {
-    launchAlgorithm("AStar");
+    diagonal = document.getElementById("diagonal").checked;
+    launchAlgorithm("AStar", diagonal);
 });
+
+document.getElementById("clearWalls").addEventListener("click", function () {
+    clearGrid(grid, true);
+});
+
+//draggability of controller
+dragElement(document.getElementById("controller"));
+function dragElement(elmnt) {
+    var pos1 = 0;
+    var pos2 = 0;
+    var pos3 = 0;
+    var pos4 = 0;
+
+    document.getElementById(elmnt.id + "Header").onmousedown = dragMouseDown;
+
+    function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // get the mouse cursor position at startup:
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        // call a function whenever the cursor moves:
+        document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // calculate the new cursor position:
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+
+        // set the element's new position:
+
+        elmnt.style.top = elmnt.offsetTop - pos2 + "px";
+        elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
+    }
+
+    function closeDragElement() {
+        // stop moving when mouse button is released:
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
+}
