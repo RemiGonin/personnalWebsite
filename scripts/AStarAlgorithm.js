@@ -1,6 +1,6 @@
 //A* implementation
 //we use a priority queue to have O(1) time complexity for each loop (else we would have to sort at nlogn time complexity for each loop) from heap.js script
-function AStarAlgorithm(startX, startY, goalX, goalY, grid) {
+function AStarAlgorithm(startX, startY, goalX, goalY, grid, diagonal) {
     for (y = 0; y < grid.height; y++) {
         for (x = 0; x < grid.width; x++) {
             grid.getCellAt(x, y).g = Infinity;
@@ -33,10 +33,10 @@ function AStarAlgorithm(startX, startY, goalX, goalY, grid) {
         currentNode = openSet.pop();
 
         if (currentNode == goalNode) {
-            return reconstructPath(goalNode, startNode);
+            return [0, reconstructPath(goalNode, startNode)];
         }
 
-        nb = grid.getNeighbors(currentNode);
+        nb = grid.getNeighbors(currentNode, diagonal);
         for (i = 0, l = nb.length; i < l; ++i) {
             neighbor = nb[i];
 
@@ -52,7 +52,11 @@ function AStarAlgorithm(startX, startY, goalX, goalY, grid) {
         }
     }
 
-    return 1;
+    if (openSet.empty()) {
+        return [1, 1];
+    } else {
+        return [2, openSet];
+    }
 }
 
 function AStarAlgorithmOneIteration(startX, startY, goalX, goalY, grid, openSet, diagonal) {

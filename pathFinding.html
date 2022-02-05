@@ -26,7 +26,13 @@
             <div id="startSearch" type="button">Start A* pathfinding ! </div>
             <div id="clearWalls" type="button">Clear walls</div>
             <div id="divDiagonal">
-                <input type="checkbox" id="diagonal"> Diagonal movement
+                <input type="checkbox" id="diagonal" checked="true"> Diagonal
+                movement
+            </div>
+            <div id="iterationTime">
+                <input type="range" min="0" max="100" value="20" step="10"
+                    id="iteration">
+                Iteration Time : <span id="iterationOutput">20 ms</span>
             </div>
 
         </div>

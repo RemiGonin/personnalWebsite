@@ -73,6 +73,8 @@ function clearGrid(grid, clearWalls) {
 
 function listenForInteractivity(grid) {
     //prevent grid elements from being draggable, which can cause problems when placing walls
+    placeWall = false;
+    removeWall = false;
     grid.cells.forEach((cellRow) => {
         cellRow.forEach((cell) => {
             CSScell = document.getElementById(toGridCoords(cell.x, cell.y));
@@ -84,6 +86,35 @@ function listenForInteractivity(grid) {
             CSScell.addEventListener("drop", (e) => {
                 e.preventDefault();
             });
+
+            CSScell.addEventListener("pointerdown", pointerdownFunc);
+            function pointerdownFunc() {
+                placeWall = false;
+                removeWall = false;
+                if (!cell.obstructed) {
+                    placeWall = true;
+                    placeWalls(cell.x, cell.y, grid);
+                } else {
+                    removeWall = true;
+                    removeWalls(cell.x, cell.y, grid);
+                }
+            }
+
+            CSScell.addEventListener("pointermove", pointerMoveFunc);
+            function pointerMoveFunc() {
+                if (placeWall == true) {
+                    placeWalls(cell.x, cell.y, grid);
+                }
+                if (removeWall == true) {
+                    removeWalls(cell.x, cell.y, grid);
+                }
+            }
+
+            CSScell.addEventListener("pointerup", pointerUpFunc);
+            function pointerUpFunc() {
+                placeWall = false;
+                removeWall = false;
+            }
         });
     });
 
@@ -103,37 +134,6 @@ function listenForInteractivity(grid) {
             grid.getCellAt(x, y).obstructed = false;
         }
     }
-
-    //placing and removing walls :
-    window.addEventListener("pointerdown", function pointerdownFunc(event) {
-        x, (y = toScreenCoords());
-
-        placeWall = false;
-        removeWall = false;
-        if (!grid.getCellAt(x, y).obstructed) {
-            placeWall = true;
-            placeWalls(x, y, grid);
-        } else {
-            removeWall = true;
-            removeWalls(x, y, grid);
-        }
-
-        window.addEventListener("pointermove", function pointerMoveFunc(event2) {
-            x, (y = toScreenCoords());
-
-            if (placeWall == true) {
-                placeWalls(x, y, grid);
-            }
-            if (removeWall == true) {
-                removeWalls(x, y, grid);
-            }
-        });
-
-        window.addEventListener("pointerup", function pointerUpFunc(e) {
-            placeWall = false;
-            removeWall = false;
-        });
-    });
 }
 
 function getWidth(height) {
@@ -168,11 +168,11 @@ var View = {
         },
 
         inOpenSet: {
-            color: "#1c7100",
+            color: "rgba(28, 112, 0, 0.548)",
         },
 
         inClosedSet: {
-            color: "lightblue",
+            color: "grey",
         },
 
         inPath: {
@@ -181,41 +181,36 @@ var View = {
     },
 };
 
-//create visual grid
-makeGrid(View.height, View.width);
-
-//create js grid (a matrix)
-grid = new Grid(View.height, View.width);
-
-startX = Math.round(View.width / 6);
-startY = Math.round(View.height / 2);
-goalX = Math.round(View.width / 1.2);
-goalY = Math.round(View.height / 2);
-
-setStartPos(startX, startY, grid);
-setGoalPos(goalX, goalY, grid);
-
-listenForInteractivity(grid);
-
-function launchAlgorithm(alg, diagonal) {
-    if (alg == "AStar") {
-        //clear previous path
-        if (typeof hasBeenLaunched !== "undefined") {
-            if (path != 1) {
-                clearGrid(grid, false);
-            }
+function launchAlgorithm(alg, diagonal, itTime) {
+    //clear previous path
+    if (typeof hasBeenLaunched !== "undefined") {
+        if (path != 1) {
+            clearGrid(grid, false);
         }
+    }
 
+    if (alg == "AStar") {
         returnValues = AStarAlgorithmOneIteration(startX, startY, goalX, goalY, grid, "firstTime", diagonal);
         state = returnValues[0];
         data = returnValues[1];
+        isFinished = 0;
+        clockLaunched = false;
 
-        clockAStar = setInterval(runOneIterationAStar, 1);
+        if (itTime == 0) {
+            while (!isFinished == 1) {
+                isFinished = runOneIterationAStar();
+            }
+        } else {
+            clockLaunched = true;
+            clockAStar = setInterval(runOneIterationAStar, itTime - 9);
+        }
 
         function runOneIterationAStar() {
             if (state == 1) {
                 //fail
-                clearInterval(clockAStar);
+                if (clockLaunched) {
+                    clearInterval(clockAStar);
+                }
                 return 1;
             } else if (state == 0) {
                 //success
@@ -226,7 +221,11 @@ function launchAlgorithm(alg, diagonal) {
                     CSScell = document.getElementById(toGridCoords(cell.x, cell.y));
                     CSScell.style.backgroundColor = View.cellStyle.inPath.color;
                 });
-                clearInterval(clockAStar);
+
+                if (clockLaunched) {
+                    clearInterval(clockAStar);
+                }
+
                 return 1;
             } else if (state == 2) {
                 //continue
@@ -253,19 +252,6 @@ function launchAlgorithm(alg, diagonal) {
     }
 }
 
-// Controller
-
-document.getElementById("startSearch").addEventListener("click", function () {
-    diagonal = document.getElementById("diagonal").checked;
-    launchAlgorithm("AStar", diagonal);
-});
-
-document.getElementById("clearWalls").addEventListener("click", function () {
-    clearGrid(grid, true);
-});
-
-//draggability of controller
-dragElement(document.getElementById("controller"));
 function dragElement(elmnt) {
     var pos1 = 0;
     var pos2 = 0;
@@ -277,12 +263,12 @@ function dragElement(elmnt) {
     function dragMouseDown(e) {
         e = e || window.event;
         e.preventDefault();
-        // get the mouse cursor position at startup:
+        // get the pointer cursor position at startup:
         pos3 = e.clientX;
         pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
+        document.onpointerup = closeDragElement;
         // call a function whenever the cursor moves:
-        document.onmousemove = elementDrag;
+        document.onpointermove = elementDrag;
     }
 
     function elementDrag(e) {
@@ -302,7 +288,50 @@ function dragElement(elmnt) {
 
     function closeDragElement() {
         // stop moving when mouse button is released:
-        document.onmouseup = null;
-        document.onmousemove = null;
+        document.onpointerup = null;
+        document.onpointermove = null;
     }
 }
+
+//create visual grid (css)
+makeGrid(View.height, View.width);
+
+//create js grid (a matrix)
+grid = new Grid(View.height, View.width);
+
+startX = Math.round(View.width / 6);
+startY = Math.round(View.height / 2);
+goalX = Math.round(View.width / 1.2);
+goalY = Math.round(View.height / 2);
+
+setStartPos(startX, startY, grid);
+setGoalPos(goalX, goalY, grid);
+
+//listen for grid interactivity
+listenForInteractivity(grid);
+
+//slider:
+slider = document.getElementById("iteration");
+sliderOutput = document.getElementById("iterationOutput");
+itTime = 20;
+slider.oninput = function () {
+    if (this.value == 0) {
+        sliderOutput.innerHTML = "instant";
+    } else {
+        sliderOutput.innerHTML = this.value + " ms";
+    }
+    itTime = this.value;
+};
+
+//Controller
+document.getElementById("startSearch").addEventListener("click", function () {
+    diagonal = document.getElementById("diagonal").checked;
+    launchAlgorithm("AStar", diagonal, itTime); //Launch AStar
+});
+
+document.getElementById("clearWalls").addEventListener("click", function () {
+    clearGrid(grid, true); //Clear grid completely
+});
+
+//draggability of controller
+dragElement(document.getElementById("controller"));
