@@ -36,10 +36,6 @@ header {
     width: 100%;
     z-index: 99;
     transition: all 0.2s ease-in-out;
-
-    &.premierePage {
-        background-color: #ffc10783;
-    }
 }
 
 // PAGE D'ACCEUIL
@@ -136,11 +132,23 @@ p#etudiant {
 }
 
 .page {
+    height: auto;
+}
+
+#premierePage {
     height: 100vh;
 }
 
-#scrollHere {
-    height: 10%;
+#scrollHereProjets {
+    height: 10vh;
+}
+
+#scrollHereCV {
+    height: 10vh;
+}
+
+#scrollHereContact {
+    height: 10vh;
 }
 
 #titreProjets {
