@@ -538,6 +538,11 @@ input[type="checkbox"]:checked + label {
   font-size: 300%;
 }
 
+#phraseIntroCV {
+  margin-right: 20%;
+  text-align: justify;
+}
+
 .categorie {
   color: var(--headerColor);
   font-size: 40px;
@@ -996,6 +1001,28 @@ input[type="checkbox"]:checked + label {
 #assos #astronoMines:hover {
   -webkit-box-shadow: 0 0 10px rgba(49, 49, 49, 0.8);
           box-shadow: 0 0 10px rgba(49, 49, 49, 0.8);
+}
+
+#competencesCentresInterets {
+  margin-top: 8%;
+  margin-left: 5%;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 7;
+  grid-column: 1/8;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+  -webkit-animation: bubbleTextAppear2 2s forwards cubic-bezier(0.58, -0.38, 0.83, 0.67);
+          animation: bubbleTextAppear2 2s forwards cubic-bezier(0.58, -0.38, 0.83, 0.67);
+}
+
+#competencesCentresInterets:hover {
+  background-color: #3d3d3d;
+  -webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+#competencesCentresInterets:hover .categorie {
+  padding-left: 1%;
 }
 
 @-webkit-keyframes bubbleTextAppear {
