@@ -200,18 +200,18 @@ p#etudiant {
       grid-template-columns: repeat(12, 1fr);
 }
 
-.projetG a {
+.projetG #lienPhotoProjet1 {
   -ms-grid-column: 1;
   -ms-grid-column-span: 6;
   grid-area: 1 / 1 / -1 /7;
   position: relative;
-  z-index: -1;
   border-radius: 4px;
   -webkit-transition: all 0.1s;
   transition: all 0.1s;
 }
 
 .projetG .photoProjetG {
+  z-index: 0;
   width: 100%;
   position: relative;
   display: block;
@@ -221,6 +221,7 @@ p#etudiant {
 }
 
 .projetG .texteProjetG {
+  z-index: 1;
   grid-area: 1 / 6 / -1 / -1;
   right: 0;
   text-align: right;
@@ -276,16 +277,17 @@ p#etudiant {
       grid-template-columns: repeat(12, 1fr);
 }
 
-.projetD a {
+.projetD #lienPhotoProjet2 {
   grid-area: 1 / 7 / -1 / -1;
   position: relative;
-  z-index: -1;
+  z-index: 1;
   border-radius: 4px;
   -webkit-transition: all 0.1s;
   transition: all 0.1s;
 }
 
 .projetD .photoProjetD {
+  z-index: 0;
   width: 100%;
   position: relative;
   display: block;
@@ -295,6 +297,7 @@ p#etudiant {
 }
 
 .projetD .texteProjetD {
+  z-index: 1;
   -ms-grid-column: 1;
   -ms-grid-column-span: 7;
   grid-area: 1 / 1 / -1 / 8;
