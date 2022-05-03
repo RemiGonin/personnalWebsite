@@ -74,19 +74,21 @@
             <div id="projets">
 
                 <div class="projetG" id="projet1">
-                    <a href="">
+                    <a href="https://remigonin.fr/pathFinding"
+                        target="_blank" id="lienPhotoProjet1">
                         <img src="./images/imageProjet1.png"
                             class="photoProjetG">
                     </a>
-
                     <div class="texteProjetG">
                         <h3 class="titreProjetG">G-Pathfinding</h3>
                         <div class="descriptionProjetG">
-                            <p> G-Pathfinding est une librairie javascript qui
+                            <p> G-Pathfinding est une librairie javascript
+                                qui
                                 permet une visualisation interactive
                                 et en temps réél de plusieurs algorithmes de
                                 recherche de plus court chemin. Développée
-                                purement en javascript, la visualisation utilise
+                                purement en javascript, la visualisation
+                                utilise
                                 une grille css, mais peut etre adaptée a
                                 n'importe quel graphe.
                             </p>
@@ -100,12 +102,14 @@
                         </ul>
 
                         <div class="liensProjetG">
-                            <a href="" id="lienGithubProjet1"><i class="fab
-                                    fa-github" target="_blank" rel="noopener
+                            <a href="" id="lienGithubProjet1" target="_blank"><i
+                                    class="fab
+                                    fa-github" rel="noopener
                                     noreferrer"></i></a>
                             <a href="https://remigonin.fr/pathFinding"
-                                id="lienExterneProjet1"><i class="fas
-                                    fa-external-link-alt" target="_blank"
+                                id="lienExterneProjet1" target="_blank"><i
+                                    class="fas
+                                    fa-external-link-alt"
                                     rel="noopener noreferrer"></i>
                             </div>
 
@@ -116,7 +120,8 @@
 
                     <div class="projetD">
                         <a href="https://devpost.com/software/cajoue"
-                            target="_blank" rel="noopener noreferrer">
+                            target="_blank" rel="noopener noreferrer"
+                            id="lienPhotoProjet2">
                             <img src="./images/cajou.png"
                                 class="photoProjetD" id="photoCajoue">
                         </a>
@@ -160,6 +165,39 @@
                         </div>
 
 
+                    </div>
+
+                    <div class="projetG" id="projet1">
+                        <a href="https://remigonin.fr"
+                            target="_blank" id="lienPhotoProjet1">
+                            <img src="./images/screenshotSite.png"
+                                class="photoProjetG">
+                        </a>
+                        <div class="texteProjetG">
+                            <h3 class="titreProjetG">Ce site</h3>
+                            <div class="descriptionProjetG">
+                                <p> J'ai créé ce site dans l'optique d'apprendre
+                                    les technologies web de base afin d'avoir
+                                    une fondaction soliude.
+                                    Ce site est entièrement developpé en
+                                    HTML/CSS/JS. Cela m'a permis de découvrir le
+                                    developpement web, et j'ai conscience qu'il
+                                    reste encore
+                                    beaucoup a apprendre et a optimiser sur ce
+                                    site.
+                                </p>
+                            </div>
+
+                            <ul class="listeCompetencesG">
+                                <li>HTML</li>
+                                <li>CSS</li>
+                                <li>Javascript</li>
+                                <li>UI_design</li>
+                            </ul>
+
+
+
+                        </div>
                     </div>
 
                 </div>
@@ -564,35 +602,46 @@
                 <div class="row">
                     <div id="contactTitre">Contactez moi</div>
                 </div>
+
                 <div class="row input-container">
-                    <div class="col-xs-12">
-                        <div class="styled-input wide">
-                            <input type="text" required />
-                            <label>Nom</label>
+                    <form
+                        action="https://formsubmit.co/8074ecc8e639654f77daca84648ba6a0"
+                        method="POST">
+                        <div class="col-xs-12">
+                            <div class="styled-input wide">
+                                <input name="name" type="text" required />
+                                <label>Nom *</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6 col-sm-12">
-                        <div class="styled-input">
-                            <input type="text" required />
-                            <label>Email</label>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="styled-input">
+                                <input name="email" type="email" required />
+                                <label>Email *</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6 col-sm-12">
-                        <div class="styled-input"
-                            style="float:right;">
-                            <input type="text" required />
-                            <label>Numéro de téléphone</label>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="styled-input"
+                                style="float:right;">
+                                <input name="phone" type="text" />
+                                <label>Numéro de téléphone</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="styled-input wide">
-                            <textarea required></textarea>
-                            <label>Message</label>
+                        <div class="col-xs-12">
+                            <div class="styled-input wide">
+                                <textarea name="message" required></textarea>
+                                <label>Message *</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="btn-lrg submit-btn">Envoyer</div>
-                    </div>
+                        <div class="col-xs-12">
+                            <button type="submit" class="btn-lrg
+                                submit-btn">Envoyer</button>
+                        </div>
+
+                        <input type="hidden" name="_autoresponse"
+                            value="Merci
+                            de m'avoir contacté ! Je vous répondrai au plus
+                            vite. Rémi Gonin.">
+                    </form>
                 </div>
             </div>
         </div>
